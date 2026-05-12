@@ -1,0 +1,4 @@
+# Ignore large image files — download them with scripts/download_kodak.sh
+kodak/
+results/gowebp/
+results/libwebp/
