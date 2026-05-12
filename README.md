@@ -1,42 +1,119 @@
 # gowebp-testdata
 
-Benchmark images and results for [gowebp](https://github.com/TommyLeng/gowebp) — a pure-Go VP8/VP8L WebP encoder.
-
 [gowebp](https://github.com/TommyLeng/gowebp) 的基準測試圖片及結果。
+
+Benchmark images and results for [gowebp](https://github.com/TommyLeng/gowebp) — a pure-Go VP8/VP8L WebP encoder.
 
 ---
 
-## Structure / 目錄結構
+## 測試圖片 / Test Images
+
+使用 [Kodak Lossless True Color Image Suite](https://r0k.us/graphics/kodak/)（業界標準圖像壓縮測試集，768×512 px）。
+
+Using the [Kodak Lossless True Color Image Suite](https://r0k.us/graphics/kodak/) — an industry-standard image compression benchmark (768×512 px).
+
+| 圖片 / Image | 描述 / Description |
+|---|---|
+| kodim01.png | 卡車與鄉村小屋 / Truck and rural building |
+| kodim05.png | 女性人像 / Female portrait |
+| kodim15.png | 木屋門廊 / Cabin porch |
+| kodim20.png | 草地與農場 / Meadow and farm |
+| kodim23.png | 女性人像（頭肩）/ Female portrait (head & shoulders) |
+| kodim24.png | 女性人像（室外）/ Female portrait (outdoor) |
+
+---
+
+## 比較結果 / Benchmark Results
+
+測試條件：Apple M1 Max，Go 1.25，cwebp 1.4.0，quality=90
+
+Test conditions: Apple M1 Max, Go 1.25, cwebp 1.4.0, quality=90
+
+### 檔案大小 / File Size
+
+| 圖片 / Image | 原圖 / Original | cwebp | gowebp | Δ size | PSNR (gowebp) |
+|---|---|---|---|---|---|
+| kodim01.png | 719 kb | 133.8 kb | 151.3 kb | +13% | 32.1 dB |
+| kodim05.png | 767 kb | 138.1 kb | 165.7 kb | +20% | 29.3 dB |
+| kodim15.png | 598 kb | 72.6 kb | 85.9 kb | +18% | 26.7 dB |
+| kodim20.png | 481 kb | 59.4 kb | 69.7 kb | +17% | 24.7 dB |
+| kodim23.png | 545 kb | 54.9 kb | 59.9 kb | +9% | 29.8 dB |
+| kodim24.png | 690 kb | 116.5 kb | 131.8 kb | +13% | 29.6 dB |
+| **平均 / Avg** | | | | **+15%** | **28.7 dB** |
+
+### 速度 / Encoding Speed
+
+| 圖片 / Image | cwebp | gowebp | 加速 / Speedup |
+|---|---|---|---|
+| kodim01.png（768×512）| 55 ms | 33 ms | **1.7×** |
+| kodim05.png | 54 ms | 35 ms | **1.5×** |
+| kodim23.png | 44 ms | 23 ms | **1.9×** |
+
+### 人像照片比較 / Portrait Photo Comparison
+
+gowebp 在人像類型的圖片（均勻背景 + 集中主體）表現更接近 cwebp：
+
+gowebp performs closer to cwebp on portrait-style images (uniform background + centered subject):
+
+| 圖片類型 / Image type | cwebp | gowebp | Δ size |
+|---|---|---|---|
+| 標準人像 300×300 / Standard portrait 300×300 | 11.8 kb | 11.6 kb | **−1.7%** |
+| 複雜大圖 1536×2048 / Complex large photo | 304 kb | 246 kb | **−19%** |
+
+---
+
+## 說明 / Notes
+
+**為什麼 Kodak 圖片 gowebp 比 cwebp 大？**
+
+**Why is gowebp larger than cwebp on Kodak images?**
+
+Kodak 圖片包含複雜的自然場景（天空漸層、草地細節、建築紋理），這類圖片的特性是：幾乎每個 macroblock 都有中等程度的紋理，SNS 的分段效果不明顯。cwebp 對這類場景有更成熟的量化器校準。
+
+Kodak images contain complex natural scenes (sky gradients, grass textures, architecture details) where almost every macroblock has medium texture. The SNS segmentation is less effective for such uniformly complex scenes. cwebp has more mature quantizer calibration for this content type.
+
+**速度優勢來自哪裡？**
+
+**Why is gowebp faster?**
+
+gowebp 直接作為 Go library 調用，無 subprocess fork 開銷；並使用 wave-front goroutine 並行按行編碼。cwebp 的時間包含 process 啟動（約 5-10ms）。
+
+gowebp runs in-process (no subprocess fork), uses wave-front goroutine parallel encoding across rows. cwebp time includes process startup (~5-10ms).
+
+---
+
+## 對比圖片 / Comparison Images
+
+`results/gowebp/` 和 `results/libwebp/` 目錄包含以上圖片的 WebP 輸出，可自行對比視覺效果。
+
+The `results/gowebp/` and `results/libwebp/` directories contain WebP outputs for visual comparison.
+
+---
+
+## 自行執行測試 / Run Benchmarks Yourself
+
+```bash
+# 下載 Kodak 圖片 / Download Kodak images
+bash scripts/download_kodak.sh
+
+# 複製到 gowebp 測試目錄 / Copy to gowebp test directory
+cp images/*.png /path/to/gowebp/test_data/original/
+
+# 執行比較 / Run comparison
+cd /path/to/gowebp
+go test -run TestCompareWithCwebp -v -timeout 300s
+```
+
+---
+
+## 目錄結構 / Directory Structure
 
 ```
 gowebp-testdata/
-├── kodak/          # Kodak Lossless True Color Image Suite (24 images)
-├── synthetic/      # Tiny generated test images / 合成測試小圖
-├── results/        # Benchmark output images / 輸出對比圖
-└── scripts/        # Download and benchmark scripts / 下載及測試腳本
-```
-
-## Download Kodak Images / 下載 Kodak 測試圖
-
-The [Kodak Lossless True Color Image Suite](http://r0k.us/graphics/kodak/) is a standard benchmark used in image compression research. 24 images, 768×512 or 512×768 pixels.
-
-```bash
-bash scripts/download_kodak.sh
-```
-
-## Run Benchmarks / 執行基準測試
-
-Requires [cwebp](https://developers.google.com/speed/webp/docs/cwebp) and Go 1.18+.
-
-```bash
-# Clone gowebp and this repo side by side
-git clone https://github.com/TommyLeng/gowebp
-git clone https://github.com/TommyLeng/gowebp-testdata
-
-# Copy Kodak images to gowebp test_data
-cp -r gowebp-testdata/kodak/* gowebp/test_data/original/
-
-# Run comparison
-cd gowebp
-go test -run TestCompareWithCwebp -v -timeout 300s
+├── images/          # Kodak 測試原圖 / Kodak source images (PNG)
+├── results/
+│   ├── gowebp/      # gowebp WebP 輸出 / gowebp WebP output
+│   └── libwebp/     # cwebp WebP 輸出 / cwebp WebP output
+└── scripts/
+    └── download_kodak.sh   # 下載 Kodak 全套圖片 / Download full Kodak suite
 ```
