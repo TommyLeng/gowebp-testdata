@@ -51,14 +51,22 @@ Test conditions: Apple M1 Max, Go 1.25, cwebp 1.4.0, quality=90
 
 ### 人像照片比較 / Portrait Photo Comparison
 
-gowebp 在人像類型的圖片（均勻背景 + 集中主體）表現更接近 cwebp：
+使用 5 張 AI 生成人像（[thispersondoesnotexist.com](https://thispersondoesnotexist.com)，1024×1024 → 縮放至 300×300，無版權）：
 
-gowebp performs closer to cwebp on portrait-style images (uniform background + centered subject):
+Using 5 AI-generated portraits ([thispersondoesnotexist.com](https://thispersondoesnotexist.com), 1024×1024 → resized to 300×300, no copyright):
 
-| 圖片類型 / Image type | cwebp | gowebp | Δ size |
-|---|---|---|---|
-| 標準人像 300×300 / Standard portrait 300×300 | 11.8 kb | 11.6 kb | **−1.7%** |
-| 複雜大圖 1536×2048 / Complex large photo | 304 kb | 246 kb | **−19%** |
+| 圖片 / Image | cwebp | gowebp | Δ size | PSNR (gowebp) |
+|---|---|---|---|---|
+| portrait_1.jpg | 16.2 kb | 17.0 kb | +4.9% | 29.6 dB |
+| portrait_2.jpg | 14.7 kb | 15.2 kb | +3.4% | 28.1 dB |
+| portrait_3.jpg | 19.0 kb | 20.2 kb | +6.3% | 29.8 dB |
+| portrait_4.jpg | 14.0 kb | 15.0 kb | +7.1% | 29.8 dB |
+| portrait_5.jpg | 18.6 kb | **18.4 kb** | **−1.1%** | 28.9 dB |
+| **平均 / Avg** | | | **+4.1%** | 29.2 dB |
+
+WebP 輸出對比圖見 `results/gowebp/portraits/` 及 `results/libwebp/portraits/`。
+
+WebP output comparison: see `results/gowebp/portraits/` and `results/libwebp/portraits/`.
 
 ---
 
