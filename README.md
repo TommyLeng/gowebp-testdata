@@ -14,12 +14,12 @@ Using the [Kodak Lossless True Color Image Suite](https://r0k.us/graphics/kodak/
 
 | 圖片 / Image | 描述 / Description |
 |---|---|
-| kodim01.png | 卡車與鄉村小屋 / Truck and rural building |
-| kodim05.png | 女性人像 / Female portrait |
-| kodim15.png | 木屋門廊 / Cabin porch |
-| kodim20.png | 草地與農場 / Meadow and farm |
-| kodim23.png | 女性人像（頭肩）/ Female portrait (head & shoulders) |
-| kodim24.png | 女性人像（室外）/ Female portrait (outdoor) |
+| kodim01.png | 石砌建築外牆（紅色窗戶）/ Stone building facade with red shutters |
+| kodim05.png | 越野摩托車比賽 / Motocross race |
+| kodim15.png | 臉部彩繪的小孩 / Child with face paint |
+| kodim20.png | 黃色二戰螺旋槳飛機 / Yellow WWII propeller aircraft |
+| kodim23.png | 兩隻金剛鸚鵡 / Two macaw parrots |
+| kodim24.png | 巴伐利亞風格彩繪民居 / Bavarian painted house |
 
 ---
 
