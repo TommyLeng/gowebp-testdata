@@ -58,17 +58,24 @@ Using 5 AI-generated portraits ([thispersondoesnotexist.com](https://thispersond
 
 （cwebp -m6 人像數據待下次重新執行基準測試後補充。/ cwebp -m6 portrait data pending next benchmark run.）
 
-### 速度 / Encoding Speed
+### 速度 / Encoding Speed (Kodak 768×512, Apple M1 Max)
 
-| 圖片 / Image | cwebp | gowebp | 加速 / Speedup |
-|---|---|---|---|
-| kodim01.png（768×512）| 56 ms | 32 ms | **1.8×** |
-| kodim05.png | 56 ms | 34 ms | **1.6×** |
-| kodim15.png | 45 ms | 21 ms | **2.1×** |
-| kodim20.png | 39 ms | 20 ms | **2.0×** |
-| kodim23.png | 43 ms | 17 ms | **2.5×** |
-| kodim24.png | 53 ms | 27 ms | **2.0×** |
-| portrait（300×300）| ~40 ms | **~6 ms** | **~7×** |
+gowebp 使用 wave-front goroutine 並行，GOMAXPROCS 越高越快；cwebp 預設單執行緒。
+
+gowebp uses wave-front goroutine parallelism; cwebp runs single-threaded.
+
+| 圖片 / Image | cwebp -m4 | gowebp P=1 | gowebp P=2 | gowebp P=4 | gowebp P=10 |
+|---|---|---|---|---|---|
+| kodim01.png | 59 ms | 110 ms (0.5×) | 87 ms (0.7×) | 46 ms (**1.3×**) | 29 ms (**2.0×**) |
+| kodim05.png | 75 ms | 107 ms (0.7×) | 87 ms (0.9×) | 42 ms (**1.8×**) | 33 ms (**2.3×**) |
+| kodim15.png | 48 ms | 86 ms (0.6×) | 57 ms (0.8×) | 33 ms (**1.5×**) | 20 ms (**2.4×**) |
+| kodim20.png | 42 ms | 82 ms (0.5×) | 55 ms (0.8×) | 28 ms (**1.5×**) | 23 ms (**1.8×**) |
+| kodim23.png | 45 ms | 71 ms (0.6×) | 51 ms (0.9×) | 28 ms (**1.6×**) | 17 ms (**2.6×**) |
+| kodim24.png | 55 ms | 101 ms (0.5×) | 66 ms (0.8×) | 39 ms (**1.4×**) | 34 ms (**1.6×**) |
+
+注意：cwebp 時間包含 process fork 開銷（~20–40 ms），gowebp 作為 library 直接調用無此開銷。P=1 時 gowebp 因做更多優化（trellis、SNS）而較慢；P=4 起開始超越 cwebp。
+
+Note: cwebp times include process fork overhead (~20–40 ms); gowebp runs in-process with no fork cost. At P=1 gowebp is slower due to heavier per-MB work (trellis, SNS); it surpasses cwebp from P=4 onward.
 
 ---
 
