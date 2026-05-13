@@ -25,7 +25,7 @@ Using the [Kodak Lossless True Color Image Suite](https://r0k.us/graphics/kodak/
 
 ## 比較結果 / Benchmark Results
 
-測試條件：Apple M1 Max，Go 1.25，cwebp 1.6.0，quality=90 -m 4
+測試條件：Apple M1 Max，Go 1.25，cwebp 1.6.0，quality=90 **-m 4**（非最高壓縮模式）
 
 Test conditions: Apple M1 Max, Go 1.25, cwebp 1.6.0, quality=90 -m 4
 
@@ -72,9 +72,13 @@ Using 5 AI-generated portraits ([thispersondoesnotexist.com](https://thispersond
 
 ## 說明 / Notes
 
-**為什麼 gowebp 比 cwebp 更小？**
+**為什麼 gowebp 在 `-m 4` 下比 cwebp 稍小？**
 
-**Why does gowebp produce smaller files than cwebp?**
+**Why is gowebp slightly smaller than `cwebp -m 4`?**
+
+重要：此比較針對 `cwebp -m 4`（libwebp 的預設 method），並非 cwebp 的最高壓縮模式（`-m 6`）。gowebp 沒有 method 參數，永遠全力執行所有優化，效果相當於 cwebp 約 -m 5。
+
+Important: this comparison is against `cwebp -m 4` (libwebp's default method), **not** cwebp's maximum compression (`-m 6`). gowebp has no method parameter and always runs all optimizations, roughly equivalent to cwebp around -m 5.
 
 gowebp 實現了一系列與 libwebp 精確對齊的優化：
 
