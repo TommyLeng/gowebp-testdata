@@ -25,21 +25,21 @@ Using the [Kodak Lossless True Color Image Suite](https://r0k.us/graphics/kodak/
 
 ## 比較結果 / Benchmark Results
 
-測試條件：Apple M1 Max，Go 1.25，cwebp 1.6.0，quality=90 **-m 4**（非最高壓縮模式）
+測試條件：Apple M1 Max，Go 1.25，cwebp 1.6.0，quality=90
 
-Test conditions: Apple M1 Max, Go 1.25, cwebp 1.6.0, quality=90 -m 4
+Test conditions: Apple M1 Max, Go 1.25, cwebp 1.6.0, quality=90
 
 ### 檔案大小：Kodak 標準測試集 / File Size: Kodak Suite
 
-| 圖片 / Image | 原圖 / Original | cwebp | gowebp | Δ size | PSNR (gowebp) |
-|---|---|---|---|---|---|
-| kodim01.png | 719 kb | 133.8 kb | **125.1 kb** | **−6.5%** | 32.1 dB |
-| kodim05.png | 767 kb | 138.1 kb | **130.7 kb** | **−5.4%** | 29.2 dB |
-| kodim15.png | 598 kb | 72.6 kb | **66.2 kb** | **−8.8%** | 26.7 dB |
-| kodim20.png | 481 kb | 59.4 kb | **55.1 kb** | **−7.2%** | 24.7 dB |
-| kodim23.png | 545 kb | 54.9 kb | **44.4 kb** | **−19.1%** | 29.7 dB |
-| kodim24.png | 690 kb | 116.5 kb | **107.1 kb** | **−8.1%** | 29.6 dB |
-| **平均 / Avg** | | | | **−9.2%** | **28.7 dB** |
+| 圖片 / Image | 原圖 / Original | cwebp -m4 | cwebp -m6 | gowebp | Δ vs m4 | Δ vs m6 | PSNR |
+|---|---|---|---|---|---|---|---|
+| kodim01.png | 719 kb | 133.8 kb | 131.8 kb | **125.1 kb** | −6.5% | **−5.1%** | 32.1 dB |
+| kodim05.png | 767 kb | 138.1 kb | 135.3 kb | **130.7 kb** | −5.4% | **−3.4%** | 29.2 dB |
+| kodim15.png | 598 kb | 72.6 kb | 69.6 kb | **66.2 kb** | −8.8% | **−4.9%** | 26.7 dB |
+| kodim20.png | 481 kb | 59.4 kb | 56.9 kb | **55.1 kb** | −7.2% | **−3.2%** | 24.7 dB |
+| kodim23.png | 545 kb | 54.9 kb | 51.2 kb | **44.4 kb** | −19.1% | **−13.3%** | 29.7 dB |
+| kodim24.png | 690 kb | 116.5 kb | 111.9 kb | **107.1 kb** | −8.1% | **−4.3%** | 29.6 dB |
+| **平均 / Avg** | | | | | **−9.2%** | **−5.7%** | **28.7 dB** |
 
 ### 檔案大小：人像照片 / File Size: Portrait Photos
 
@@ -47,14 +47,16 @@ Test conditions: Apple M1 Max, Go 1.25, cwebp 1.6.0, quality=90 -m 4
 
 Using 5 AI-generated portraits ([thispersondoesnotexist.com](https://thispersondoesnotexist.com), resized to 300×300, no copyright):
 
-| 圖片 / Image | cwebp | gowebp | Δ size | PSNR (gowebp) |
-|---|---|---|---|---|
-| portrait_1.jpg | 16.2 kb | **13.0 kb** | **−19.8%** | 29.6 dB |
-| portrait_2.jpg | 14.7 kb | **11.8 kb** | **−19.7%** | 28.0 dB |
-| portrait_3.jpg | 19.0 kb | **15.7 kb** | **−17.4%** | 29.7 dB |
-| portrait_4.jpg | 14.0 kb | **11.5 kb** | **−17.9%** | 29.8 dB |
-| portrait_5.jpg | 18.6 kb | **14.2 kb** | **−23.7%** | 28.9 dB |
-| **平均 / Avg** | | | **−19.7%** | **29.2 dB** |
+| 圖片 / Image | cwebp -m4 | cwebp -m6 | gowebp | Δ vs m4 | Δ vs m6 | PSNR |
+|---|---|---|---|---|---|---|
+| portrait_1.jpg | 16.2 kb | — | **13.0 kb** | −19.8% | — | 29.6 dB |
+| portrait_2.jpg | 14.7 kb | — | **11.8 kb** | −19.7% | — | 28.0 dB |
+| portrait_3.jpg | 19.0 kb | — | **15.7 kb** | −17.4% | — | 29.7 dB |
+| portrait_4.jpg | 14.0 kb | — | **11.5 kb** | −17.9% | — | 29.8 dB |
+| portrait_5.jpg | 18.6 kb | — | **14.2 kb** | −23.7% | — | 28.9 dB |
+| **平均 / Avg** | | | | **−19.7%** | — | **29.2 dB** |
+
+（cwebp -m6 人像數據待下次重新執行基準測試後補充。/ cwebp -m6 portrait data pending next benchmark run.）
 
 ### 速度 / Encoding Speed
 
@@ -76,9 +78,9 @@ Using 5 AI-generated portraits ([thispersondoesnotexist.com](https://thispersond
 
 **Why is gowebp slightly smaller than `cwebp -m 4`?**
 
-重要：此比較針對 `cwebp -m 4`（libwebp 的預設 method），並非 cwebp 的最高壓縮模式（`-m 6`）。gowebp 沒有 method 參數，永遠全力執行所有優化，效果相當於 cwebp 約 -m 5。
+gowebp 沒有 method 參數，永遠全力執行所有優化。實測結果顯示 gowebp 在 `-m 4` 及 `-m 6`（cwebp 最高壓縮模式）下均輸出更小的檔案，Kodak 套件平均比 -m4 小 9.2%，比 -m6 小 5.7%。
 
-Important: this comparison is against `cwebp -m 4` (libwebp's default method), **not** cwebp's maximum compression (`-m 6`). gowebp has no method parameter and always runs all optimizations, roughly equivalent to cwebp around -m 5.
+gowebp has no method parameter and always runs all optimizations. Measured results show gowebp produces smaller files than both `cwebp -m 4` and `cwebp -m 6` (maximum compression) — averaging −9.2% vs -m4 and −5.7% vs -m6 on the Kodak suite.
 
 gowebp 實現了一系列與 libwebp 精確對齊的優化：
 
@@ -109,20 +111,20 @@ gowebp uses wave-front goroutine parallel encoding (one goroutine per MB row); c
 
 以 kodim01.png（768×512）為例 / Example with kodim01.png (768×512):
 
-| GOMAXPROCS | gowebp | cwebp -m 4 | 對比 / vs cwebp |
-|---|---|---|---|
-| 1 | 120 ms | 65 ms | 0.5× (slower) |
-| 2 | 67 ms | 65 ms | 相若 / comparable |
-| 4 | 42 ms | 65 ms | 1.5× faster |
-| 10 | 38 ms | 65 ms | 1.7× faster |
+| GOMAXPROCS | gowebp | cwebp -m4 | vs m4 | cwebp -m6 | vs m6 |
+|---|---|---|---|---|---|
+| 1 | 110 ms | 59 ms | 0.5× (slower) | 129 ms | 1.2× faster |
+| 2 | 87 ms | 59 ms | 0.7× (slower) | 129 ms | 1.5× faster |
+| 4 | 46 ms | 59 ms | **1.3× faster** | 129 ms | **2.8× faster** |
+| 10 | 29 ms | 59 ms | **2.0× faster** | 129 ms | **4.4× faster** |
 
-單核（GOMAXPROCS=1）時 gowebp 比 cwebp 慢約 2×，因為 gowebp 做更多優化（trellis、SNS、RD scoring）。GOMAXPROCS=4 開始追上，GOMAXPROCS=10 時快約 1.7×。
+單核（GOMAXPROCS=1）時 gowebp 比 cwebp -m4 慢約 2×，因為 gowebp 做更多優化（trellis、SNS、RD scoring）；但已比 cwebp -m6 快 1.2×。GOMAXPROCS=4 開始超越 cwebp -m4，GOMAXPROCS=10 時比 -m4 快 2×、比 -m6 快 4.4×。
 
-At GOMAXPROCS=1, gowebp is ~2× slower than cwebp due to heavier per-MB optimization (trellis, SNS, RD scoring). It catches up at GOMAXPROCS=4 and becomes ~1.7× faster at GOMAXPROCS=10.
+At GOMAXPROCS=1, gowebp is ~2× slower than cwebp -m4 due to heavier per-MB work (trellis, SNS, RD scoring), but already 1.2× faster than cwebp -m6. It surpasses cwebp -m4 at GOMAXPROCS=4, and at GOMAXPROCS=10 is 2× faster than -m4 and 4.4× faster than -m6.
 
-各 GOMAXPROCS 的完整結果見 `results/gomaxprocs_N.md`。
+完整所有圖片的 GOMAXPROCS 對比見 `results/gomaxprocs_combined.md`。
 
-Full results for each GOMAXPROCS setting: see `results/gomaxprocs_N.md`.
+Full results across all images: see `results/gomaxprocs_combined.md`.
 
 ---
 
