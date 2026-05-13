@@ -101,6 +101,31 @@ gowebp runs in-process (no subprocess fork), uses wave-front goroutine parallel 
 
 ---
 
+## 並行度測試 / Parallelism Benchmark (GOMAXPROCS)
+
+gowebp 使用 wave-front goroutine 並行編碼（每行 MB 一條 goroutine），cwebp 預設單執行緒。
+
+gowebp uses wave-front goroutine parallel encoding (one goroutine per MB row); cwebp runs single-threaded by default.
+
+以 i30.jpeg（1096×1600）為例 / Example with i30.jpeg (1096×1600):
+
+| GOMAXPROCS | gowebp | cwebp -m 4 | 對比 / vs cwebp |
+|---|---|---|---|
+| 1 | 390 ms | 419 ms | 相若 / comparable |
+| 2 | 218 ms | 419 ms | 1.9× faster |
+| 4 | 126 ms | 419 ms | 3.3× faster |
+| 10 | 168 ms | 419 ms | 2.5× faster |
+
+GOMAXPROCS=1 時 gowebp 與 cwebp 速度相若，速度優勢完全來自 multi-core 並行。
+
+At GOMAXPROCS=1, gowebp and cwebp have comparable speed — the speedup comes entirely from multi-core parallelism.
+
+各 GOMAXPROCS 的完整結果見 `results/gomaxprocs_N.md`。
+
+Full results for each GOMAXPROCS setting: see `results/gomaxprocs_N.md`.
+
+---
+
 ## 對比圖片 / Comparison Images
 
 `results/gowebp/` 和 `results/libwebp/` 目錄包含以上圖片的 WebP 輸出，可自行對比視覺效果。
