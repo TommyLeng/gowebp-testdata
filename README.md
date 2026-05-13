@@ -25,68 +25,75 @@ Using the [Kodak Lossless True Color Image Suite](https://r0k.us/graphics/kodak/
 
 ## 比較結果 / Benchmark Results
 
-測試條件：Apple M1 Max，Go 1.25，cwebp 1.4.0，quality=90
+測試條件：Apple M1 Max，Go 1.25，cwebp 1.6.0，quality=90 -m 4
 
-Test conditions: Apple M1 Max, Go 1.25, cwebp 1.4.0, quality=90
+Test conditions: Apple M1 Max, Go 1.25, cwebp 1.6.0, quality=90 -m 4
 
-### 檔案大小 / File Size
+### 檔案大小：Kodak 標準測試集 / File Size: Kodak Suite
 
 | 圖片 / Image | 原圖 / Original | cwebp | gowebp | Δ size | PSNR (gowebp) |
 |---|---|---|---|---|---|
-| kodim01.png | 719 kb | 133.8 kb | 151.3 kb | +13% | 32.1 dB |
-| kodim05.png | 767 kb | 138.1 kb | 165.7 kb | +20% | 29.3 dB |
-| kodim15.png | 598 kb | 72.6 kb | 85.9 kb | +18% | 26.7 dB |
-| kodim20.png | 481 kb | 59.4 kb | 69.7 kb | +17% | 24.7 dB |
-| kodim23.png | 545 kb | 54.9 kb | 59.9 kb | +9% | 29.8 dB |
-| kodim24.png | 690 kb | 116.5 kb | 131.8 kb | +13% | 29.6 dB |
-| **平均 / Avg** | | | | **+15%** | **28.7 dB** |
+| kodim01.png | 719 kb | 133.8 kb | **125.1 kb** | **−6.5%** | 32.1 dB |
+| kodim05.png | 767 kb | 138.1 kb | **130.7 kb** | **−5.4%** | 29.2 dB |
+| kodim15.png | 598 kb | 72.6 kb | **66.2 kb** | **−8.8%** | 26.7 dB |
+| kodim20.png | 481 kb | 59.4 kb | **55.1 kb** | **−7.2%** | 24.7 dB |
+| kodim23.png | 545 kb | 54.9 kb | **44.4 kb** | **−19.1%** | 29.7 dB |
+| kodim24.png | 690 kb | 116.5 kb | **107.1 kb** | **−8.1%** | 29.6 dB |
+| **平均 / Avg** | | | | **−9.2%** | **28.7 dB** |
+
+### 檔案大小：人像照片 / File Size: Portrait Photos
+
+使用 5 張 AI 生成人像（[thispersondoesnotexist.com](https://thispersondoesnotexist.com)，縮放至 300×300，無版權）：
+
+Using 5 AI-generated portraits ([thispersondoesnotexist.com](https://thispersondoesnotexist.com), resized to 300×300, no copyright):
+
+| 圖片 / Image | cwebp | gowebp | Δ size | PSNR (gowebp) |
+|---|---|---|---|---|
+| portrait_1.jpg | 16.2 kb | **13.0 kb** | **−19.8%** | 29.6 dB |
+| portrait_2.jpg | 14.7 kb | **11.8 kb** | **−19.7%** | 28.0 dB |
+| portrait_3.jpg | 19.0 kb | **15.7 kb** | **−17.4%** | 29.7 dB |
+| portrait_4.jpg | 14.0 kb | **11.5 kb** | **−17.9%** | 29.8 dB |
+| portrait_5.jpg | 18.6 kb | **14.2 kb** | **−23.7%** | 28.9 dB |
+| **平均 / Avg** | | | **−19.7%** | **29.2 dB** |
 
 ### 速度 / Encoding Speed
 
 | 圖片 / Image | cwebp | gowebp | 加速 / Speedup |
 |---|---|---|---|
-| kodim01.png（768×512）| 55 ms | 33 ms | **1.7×** |
-| kodim05.png | 54 ms | 35 ms | **1.5×** |
-| kodim23.png | 44 ms | 23 ms | **1.9×** |
-
-### 人像照片比較 / Portrait Photo Comparison
-
-使用 5 張 AI 生成人像（[thispersondoesnotexist.com](https://thispersondoesnotexist.com)，1024×1024 → 縮放至 300×300，無版權）：
-
-Using 5 AI-generated portraits ([thispersondoesnotexist.com](https://thispersondoesnotexist.com), 1024×1024 → resized to 300×300, no copyright):
-
-| 圖片 / Image | cwebp | gowebp | Δ size | PSNR (gowebp) |
-|---|---|---|---|---|
-| portrait_1.jpg | 16.2 kb | 17.0 kb | +4.9% | 29.6 dB |
-| portrait_2.jpg | 14.7 kb | 15.2 kb | +3.4% | 28.1 dB |
-| portrait_3.jpg | 19.0 kb | 20.2 kb | +6.3% | 29.8 dB |
-| portrait_4.jpg | 14.0 kb | 15.0 kb | +7.1% | 29.8 dB |
-| portrait_5.jpg | 18.6 kb | **18.4 kb** | **−1.1%** | 28.9 dB |
-| **平均 / Avg** | | | **+4.1%** | 29.2 dB |
-
-WebP 輸出對比圖見 `results/gowebp/portraits/` 及 `results/libwebp/portraits/`。
-
-WebP output comparison: see `results/gowebp/portraits/` and `results/libwebp/portraits/`.
+| kodim01.png（768×512）| 56 ms | 32 ms | **1.8×** |
+| kodim05.png | 56 ms | 34 ms | **1.6×** |
+| kodim15.png | 45 ms | 21 ms | **2.1×** |
+| kodim20.png | 39 ms | 20 ms | **2.0×** |
+| kodim23.png | 43 ms | 17 ms | **2.5×** |
+| kodim24.png | 53 ms | 27 ms | **2.0×** |
+| portrait（300×300）| ~40 ms | **~6 ms** | **~7×** |
 
 ---
 
 ## 說明 / Notes
 
-**為什麼 Kodak 圖片 gowebp 比 cwebp 大？**
+**為什麼 gowebp 比 cwebp 更小？**
 
-**Why is gowebp larger than cwebp on Kodak images?**
+**Why does gowebp produce smaller files than cwebp?**
 
-Kodak 圖片包含複雜的自然場景（天空漸層、草地細節、建築紋理），這類圖片的特性是：幾乎每個 macroblock 都有中等程度的紋理，SNS 的分段效果不明顯。cwebp 對這類場景有更成熟的量化器校準。
+gowebp 實現了一系列與 libwebp 精確對齊的優化：
 
-Kodak images contain complex natural scenes (sky gradients, grass textures, architecture details) where almost every macroblock has medium texture. The SNS segmentation is less effective for such uniformly complex scenes. cwebp has more mature quantizer calibration for this content type.
+gowebp implements a series of optimizations precisely matched to libwebp:
+
+- **精確 RD 評分**：`score = 256×D + λ×(H+R+flatPenalty)`，與 libwebp `SetRDScore` 完全一致，令失真主導模式選擇（86% 權重）
+- **精確 VP8EntropyCost 表**：直接從 `libwebp/src/dsp/cost.c` 移植，消除舊表的索引偏移錯誤
+- **係數位元代價 R**：i4 塊評分包含實際位元流代價，對齊 libwebp `GetResidualCost_C`
+- **平坦懲罰**：AC 係數 ≤3 的平坦 i4 塊加入 `FLATNESS_PENALTY=140`，避免過度採用非 DC 模式
+- **SNS 空間噪聲整形**：4 段 K-means 量化器分段，精確移植 `VP8SetSegmentParams`
+- **Trellis 量化**：Viterbi DP，移植自 libwebp `TrellisQuantizeBlock()`
 
 **速度優勢來自哪裡？**
 
 **Why is gowebp faster?**
 
-gowebp 直接作為 Go library 調用，無 subprocess fork 開銷；並使用 wave-front goroutine 並行按行編碼。cwebp 的時間包含 process 啟動（約 5-10ms）。
+gowebp 直接作為 Go library 調用，無 subprocess fork 開銷；並使用 wave-front goroutine 並行按行編碼。cwebp 的時間包含 process 啟動（約 10–20ms），對小圖影響尤其明顯。
 
-gowebp runs in-process (no subprocess fork), uses wave-front goroutine parallel encoding across rows. cwebp time includes process startup (~5-10ms).
+gowebp runs in-process (no subprocess fork), uses wave-front goroutine parallel encoding across rows. cwebp time includes process startup (~10–20ms), which dominates for small images.
 
 ---
 
@@ -105,7 +112,7 @@ The `results/gowebp/` and `results/libwebp/` directories contain WebP outputs fo
 bash scripts/download_kodak.sh
 
 # 複製到 gowebp 測試目錄 / Copy to gowebp test directory
-cp images/*.png /path/to/gowebp/test_data/original/
+cp images/*.png /path/to/gowebp/test_data/original/kodak/
 
 # 執行比較 / Run comparison
 cd /path/to/gowebp
