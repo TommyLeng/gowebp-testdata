@@ -127,9 +127,21 @@ gowebp uses wave-front goroutine parallel encoding (one goroutine per MB row); c
 
 At GOMAXPROCS=1, gowebp is ~2× slower than cwebp -m4 (excluding fork overhead) due to heavier per-MB work (trellis, SNS, RD scoring), but already 1.2× faster than cwebp -m6. It surpasses cwebp -m4 at GOMAXPROCS=4, and at GOMAXPROCS=10 is 1.9× faster than -m4 and 4.4× faster than -m6. For small images (e.g. 300×300), the P=1 gap is smaller (gowebp ~11ms vs cwebp ~20ms including fork).
 
-完整所有圖片的 GOMAXPROCS 對比見 `results/gomaxprocs_combined.md`。
+完整所有圖片的 GOMAXPROCS 對比 / Full results across all images:
 
-Full results across all images: see `results/gomaxprocs_combined.md`.
+| File | Original | cwebp -m4 | m4 time | cwebp -m6 | m6 time | go size | PSNR | P=1 ms | P=2 ms | P=4 ms | P=10 ms |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| kodak/kodim01.png | 719.2 kb | 133.8 kb | 50 ms | 131.8 kb | 119 ms | 125.7 kb | 32.1 dB | 96 | 64 | 41 | 27 |
+| kodak/kodim05.png | 767.2 kb | 138.1 kb | 51 ms | 135.3 kb | 116 ms | 131.3 kb | 29.2 dB | 93 | 67 | 39 | 26 |
+| kodak/kodim15.png | 598.2 kb | 72.6 kb | 41 ms | 69.6 kb | 82 ms | 66.8 kb | 26.7 dB | 61 | 44 | 23 | 17 |
+| kodak/kodim20.png | 480.9 kb | 59.4 kb | 35 ms | 56.9 kb | 69 ms | 55.9 kb | 24.7 dB | 56 | 36 | 20 | 15 |
+| kodak/kodim23.png | 544.5 kb | 54.9 kb | 38 ms | 51.2 kb | 71 ms | 46.3 kb | 29.7 dB | 48 | 33 | 18 | 12 |
+| kodak/kodim24.png | 689.8 kb | 116.5 kb | 48 ms | 111.9 kb | 102 ms | 108.5 kb | 29.6 dB | 99 | 60 | 33 | 24 |
+| portrait_1.jpg | 572.6 kb | 16.2 kb | 34 ms | 15.3 kb | 44 ms | 13.5 kb | 29.6 dB | 14 | 10 | 5 | 5 |
+| portrait_2.jpg | 530.2 kb | 14.7 kb | 38 ms | 13.9 kb | 42 ms | 12.0 kb | 28.0 dB | 12 | 7 | 5 | 4 |
+| portrait_3.jpg | 555.2 kb | 19.0 kb | 34 ms | 18.2 kb | 44 ms | 16.1 kb | 29.7 dB | 15 | 10 | 6 | 5 |
+| portrait_4.jpg | 576.9 kb | 14.0 kb | 34 ms | 13.3 kb | 42 ms | 12.1 kb | 29.8 dB | 12 | 8 | 5 | 4 |
+| portrait_5.jpg | 586.9 kb | 18.6 kb | 35 ms | 17.7 kb | 45 ms | 14.7 kb | 28.9 dB | 14 | 10 | 5 | 4 |
 
 ---
 
